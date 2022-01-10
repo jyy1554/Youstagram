@@ -264,8 +264,24 @@ function Profile() {
               </div>
             </div>
           </div>
+          
           <div className='profile-info-desc'>
-
+            <div className='desc'>
+              <div className='title txt-bold'>좋아요</div>
+              <div className='count'>739,000</div>
+            </div>
+            <div className='desc'>
+              <div className='title txt-bold'>팔로워</div>
+              <div className='count'>2,539,000</div>
+            </div>
+            <div className='desc'>
+              <div className='title txt-bold'>포스트</div>
+              <div className='count'>320</div>
+            </div>
+            <div className='desc'>
+              <div className='title txt-bold'>친구</div>
+              <div className='count'>236,320</div>
+            </div>
           </div>
         </div>
 

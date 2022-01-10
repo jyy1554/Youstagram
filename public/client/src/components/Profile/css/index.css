@@ -8,6 +8,7 @@
   padding-top: 36px;
   width: 1000px;
   margin: 0 auto;
+  padding-bottom: 100px;
 }
 
 #root .profile .wrapper .info {
@@ -83,7 +84,7 @@
       -ms-flex-align: center;
           align-items: center;
   overflow-x: scroll;
-  height: 200px;
+  overflow-y: hidden;
   width: 100%;
   margin-top: 32px;
 }
@@ -113,6 +114,11 @@
 
 #root .profile .wrapper .profile-contents .feed-list {
   width: 729px;
+}
+
+#root .profile .wrapper .profile-contents .feed-list > .title {
+  font-size: 20px;
+  color: #454545;
 }
 
 #root .profile .wrapper .profile-contents .feed-list .feeds .feed {
@@ -212,5 +218,36 @@
 
 #root .profile .wrapper .profile-contents .profile-info-desc {
   width: 255px;
+  display: -ms-grid;
+  display: grid;
+  row-gap: 8px;
+  padding: 16px;
+  background-color: white;
+  border: 1px solid #e8e8e8;
+  position: -webkit-sticky;
+  position: sticky;
+  top: 80px;
+}
+
+#root .profile .wrapper .profile-contents .profile-info-desc .desc {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+
+#root .profile .wrapper .profile-contents .profile-info-desc .desc > .title {
+  font-size: 12px;
+  text-align: left;
+}
+
+#root .profile .wrapper .profile-contents .profile-info-desc .desc .count {
+  text-align: right;
+  font-size: 12px;
 }
 /*# sourceMappingURL=index.css.map */
