@@ -16,13 +16,8 @@ function Login() {
   const __doLogin = useCallback(
     (e) => {
       e.preventDefault();
-      Fauth.signInWithEmailAndPassword(email,password).then(credential => {
-        const {user} = credential
-        console.log(user);
-        dispatch({
-          type : __UPDATE_HEADER_STATE__,
-          payload : true
-        });
+      Fauth.signInWithEmailAndPassword(email,password)
+      .then(credential => {
         history.push('/feed');
       }).catch(err => {
         console.log(err);
