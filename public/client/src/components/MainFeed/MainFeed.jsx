@@ -100,24 +100,27 @@ function MainFeed() {
       <div className='wrapper'>
         <div className='feed-list'>
           <form className='write-feed' onSubmit={__makeFeed}>
-            <div className='profile-image'>
-
+            <div className='write-text'>
+              <div className='profile-image'></div>
+              <div className='inp'>
+                <input 
+                  ref={contextRef}
+                  type="text"
+                  placeholder='오늘 무슨일이 있었나요?'
+                  onChange={(e) => setContext(e.target.value)} />
+              </div>
+              <div className='get-image'>
+                <label htmlFor="get-image-input">
+                  <img src="/assets/main/add-image.svg" alt="이미지 추가하기" />
+                </label>
+                <input
+                  id='get-image-input'
+                  type="file"
+                  onChange={__getData64FromImage} />
+              </div>
             </div>
-            <div className='inp'>
-              <input 
-                ref={contextRef}
-                type="text"
-                placeholder='오늘 무슨일이 있었나요?'
-                onChange={(e) => setContext(e.target.value)} />
-            </div>
-            <div className='get-image'>
-              <label htmlFor="get-image-input">
-                <img src="/assets/main/add-image.svg" alt="이미지 추가하기" />
-              </label>
-              <input 
-                id='get-image-input'
-                type="file"
-                onChange={__getData64FromImage} />
+            <div className='pre-image'>
+              { feed_image ? ( <img src={feed_image} alt="이미지 미리보기" /> ) : (<></>) }
             </div>
           </form>
 

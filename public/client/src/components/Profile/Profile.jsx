@@ -13,8 +13,7 @@ function Profile() {
             <div className='nickname txt-bold'>
               해도디
             </div>
-            {
-              false ? (
+            { true ? (
                 <div className='quote'>
                   <textarea placeholder='자신의 한줄평을 입력해주세요'></textarea>
                 </div>
@@ -264,7 +263,7 @@ function Profile() {
               </div>
             </div>
           </div>
-          
+
           <div className='profile-info-desc'>
             <div className='desc'>
               <div className='title txt-bold'>좋아요</div>
