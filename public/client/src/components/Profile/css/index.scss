@@ -27,7 +27,18 @@ $class-101-white200 : #fafafa;
           background-color: $class-101-gray;
           margin-right: 18px;
           flex-shrink: 0;
+          background-position: center;
+          background-size: cover;
+          background-repeat: no-repeat;
+          
+          // 프로필 이미지 눌렀을 때 파일 업로드 뜨게하려고
+          input {
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+          }
         }
+
         .profile-desc {
           flex: 1;
 
@@ -46,7 +57,7 @@ $class-101-white200 : #fafafa;
               border: none;
               resize: none;
               width: 100%;
-              height: 73px;
+              height: 43px;
               background-color: $class-101-white200;
             }
           }
