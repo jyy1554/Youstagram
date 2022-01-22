@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { __UPDATE_HEADER_STATE__ } from '@dispatchers/layouts';
 
-const Fauth = firebaseApp.auth()
+const Fauth = firebaseApp.auth();
 
 function Login() {
   const dispatch = useDispatch();
@@ -22,8 +22,7 @@ function Login() {
       }).catch(err => {
         console.log(err);
       })
-    },
-    [email, password, history, dispatch]
+    }, [email, password, history]
   );
 
   const __goJoin = useCallback(

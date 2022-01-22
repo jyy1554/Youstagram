@@ -11,6 +11,7 @@ function Profile() {
   const [userImage, setUserImage] = useState(undefined);
   const [quote, setQuote] = useState(undefined);
   const [feeds, setFeeds] = useState([]);
+  const [likeCount, setLikeCount] = useState(0);
   const session = useSelector(state => state.auth.session);
 
   const __uploadImageToDatabase = useCallback(
@@ -152,10 +153,16 @@ function Profile() {
         })
       })
         .then((res) => res.json())
-        .then(({feed, msg}) => {
+        .then(({ feed, msg }) => {
           console.log(msg);
+          const totalLikeCount = feed.reduce((prev, next) => {
+            return prev + next.feed.like;
+          }, 0);
+          console.log(totalLikeCount);
+          setLikeCount(totalLikeCount);
           setFeeds(feed.reverse());
-      }).catch(err => {
+      })
+      .catch(err => {
         console.log(err);
       });
     }
@@ -208,27 +215,16 @@ function Profile() {
         </div>
 
         <div className='feed-images'>
-          <div className='feed-image'>
-            <img src="https://api.time.com/wp-content/uploads/2014/05/mrwallpapers.jpg" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRyxoqFxUu0n0l8gFDHx2GxkIICbe9Bu5k8qw&usqp=CAU" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://cdna.artstation.com/p/assets/images/images/024/538/892/large/pixel-jeff-version2.jpg?1582740652" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://webneel.com/wallpaper/sites/default/files/images/08-2018/3-nature-wallpaper-mountain.jpg" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://r1.ilikewallpaper.net/iphone-wallpapers/download-105173/worm's-eye-view-of-sewer-lid_200.jpg" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://lh3.googleusercontent.com/z5vvamGMwczpSEuBlG91aKA8H-V0pDLZXyL97_w5JSjxj6jLPoQ08tJnszqwkUyiqsU" alt="" />
-          </div>
-          <div className='feed-image'>
-            <img src="https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500" alt="" />
-          </div>
+          {feeds
+            .filter(i => i.feed.image)
+            .map((item, idx) => {
+              const {feed: {image}} = item;
+              return (
+                <div className='feed-image' key={idx}>
+                  <img src={image} alt="피드 이미지" />
+                </div>
+              );
+            })}
         </div>
 
         <div className='profile-contents'>
@@ -247,19 +243,19 @@ function Profile() {
           <div className='profile-info-desc'>
             <div className='desc'>
               <div className='title txt-bold'>좋아요</div>
-              <div className='count'>739,000</div>
+              <div className='count'>{likeCount}</div>
             </div>
             <div className='desc'>
               <div className='title txt-bold'>팔로워</div>
-              <div className='count'>2,539,000</div>
+              <div className='count'>0</div>
             </div>
             <div className='desc'>
               <div className='title txt-bold'>포스트</div>
-              <div className='count'>320</div>
+              <div className='count'>{feeds.length}</div>
             </div>
             <div className='desc'>
               <div className='title txt-bold'>친구</div>
-              <div className='count'>236,320</div>
+              <div className='count'>0</div>
             </div>
           </div>
         </div>
