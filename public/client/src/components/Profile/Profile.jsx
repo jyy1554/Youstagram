@@ -1,6 +1,7 @@
 import firebaseApp from '@config/firebaseApp';
 import React, { useCallback, useState, useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import { useHistory, useParams } from 'react-router-dom';
 import Feed from '../Feed/Feed';
 import './css/index.css'
 
@@ -12,7 +13,10 @@ function Profile() {
   const [quote, setQuote] = useState(undefined);
   const [feeds, setFeeds] = useState([]);
   const [likeCount, setLikeCount] = useState(0);
+  const [recommendFriends, setRecommendFriends] = useState([]);
   const session = useSelector(state => state.auth.session);
+  const history = useHistory();
+  const param = useParams();
 
   const __uploadImageToDatabase = useCallback(
     (uid, url) => {
@@ -168,12 +172,47 @@ function Profile() {
     }
   }, [session]);
 
+  const __getRecommendFriends = useCallback(() => {
+    if (session) {
+      const {uid} = session;
+      let url = '/friends/recommend';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Allow-Control-Access-Origin': '*'
+        },
+        body: JSON.stringify({
+          uid
+        })
+      })
+        .then((res) => res.json())
+        .then(({friends, msg}) => {
+          setRecommendFriends(friends);
+          console.log(friends);
+          console.log(msg);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
+  }, [session]);
+
   useEffect(() => {
     __getUserFeed();
     __getUserProfileFromServer();
     __getUserQuoteFromServer();
+    __getRecommendFriends();
     return () => {};
-  }, [__getUserProfileFromServer, __getUserQuoteFromServer, __getUserFeed]);
+  }, [__getUserProfileFromServer, __getUserQuoteFromServer, __getUserFeed, __getRecommendFriends]);
+
+  useEffect(() => {
+    console.log(param);
+    return () => {
+    };
+  }, [param]);
+  
 
   return (
     <div className='profile'>
@@ -256,6 +295,30 @@ function Profile() {
             <div className='desc'>
               <div className='title txt-bold'>친구</div>
               <div className='count'>0</div>
+            </div>
+
+            <div className='my-friends'>
+              <div className='title txt-bold'>
+                추천 친구
+              </div>
+              <ul className='friend-list-wrapper'>
+                {recommendFriends.map((item,idx) => {
+                  const {uid, data: {profile : {image,nickname}}} = item;
+                  return (
+                    <li
+                      className='friend' key={idx}
+                      onClick={() => history.push(`/profile/${uid}`)}
+                    >
+                      <div className='profile-image' 
+                        style={image && {backgroundImage:`url(${image})`}}
+                      ></div>
+                      <div className='nickname txt-bold'>
+                        {nickname}
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </div>

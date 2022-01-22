@@ -85,6 +85,7 @@ function App() {
         <Route path="/join" exact component = {Join} />
         <Route path="/feed" exact component = {MainFeed} />
         <Route path="/profile" exact component = {Profile} />
+        <Route path="/profile/:uid" exact component = {Profile} />
       </Switch>
       {false && <Detail/>}
     </Router>
