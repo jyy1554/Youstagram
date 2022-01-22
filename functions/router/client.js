@@ -124,6 +124,34 @@ router.post('/user/profile/quote', (req,res,next) => {
   })
 })
 
+//feed를 불러오는 서버
+router.post('/user/feed', (req, res, next) => {
+  const {uid} = req.body;
+
+  Fdatabase.ref('feed').orderByChild('profile/uid').equalTo(uid).once('value', snapshot => {
+    if (snapshot.exists()) {
+      //피드가 존재
+      const value = snapshot.val(); //내가 쓴 글
+      const feedlength = Object.keys(value).length;
+
+      res.status(200).json({
+        feed: Object.values(value),
+        msg: `피드가 ${feedlength}개 존재합니다`
+      })
+    } else {
+      //피드가 존재하지 않을 때
+      res.status(200).json({
+        feed: [],
+        msg: '피드가 존재하디 않습니다'
+      })
+    }
+  }).catch(err => {
+    res.status(400).json({
+      err
+    })
+  })
+})
+
 router.get('/helloworld', (req, res, next) => {
   res.json({
     msg: 'hellowold'
