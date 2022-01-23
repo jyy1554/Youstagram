@@ -8,7 +8,8 @@ import './css/index.css'
 const Fdatabase = firebaseApp.database();
 const Fstorage = firebaseApp.storage();
 
-function Profile() {
+function Profile({location : {state : {isFollowing}}}) {
+  const [isFollowingForUI, setIsFollowingForUI] = useState(isFollowing ? isFollowing : false);
   const [userImage, setUserImage] = useState(undefined);
   const [quote, setQuote] = useState(undefined);
   const [feeds, setFeeds] = useState([]);
@@ -16,9 +17,69 @@ function Profile() {
   const [recommendFriends, setRecommendFriends] = useState([]);
   const [isMyProfile, setIsMyProfile] = useState(false);
   const session = useSelector(state => state.auth.session);
+  const following = useSelector(state => state.auth.following);
   const history = useHistory();
   const param = useParams();
   const location = useLocation();
+
+  //나와 친구 모두에게 영향
+  const __unFollow = useCallback(() => {
+    if (session) {
+      const {uid} = session;
+      const {uid : fuid} = param;
+
+      let url = '/friend/unfollow';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Allow-Control-Access-Origin': '*',
+        },
+        body: JSON.stringify({
+          uid, fuid
+        })
+      })
+        .then(res => res.json())
+        .then(({msg}) => {
+          setIsFollowingForUI(false);
+          console.log(msg);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [session, param]);
+  
+
+  const __doFollow = useCallback(() => {
+    if (session) {
+      const {uid} = session;
+      const {uid : fuid} = param;
+
+      let url = '/friend/follow';
+
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Allow-Control-Access-Origin': '*',
+        },
+        body: JSON.stringify({
+          uid, fuid
+        })
+      })
+        .then(res => res.json())
+        .then(({msg}) => {
+          setIsFollowingForUI(true);
+          console.log(msg);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+    }
+  }, [session, param]);
+
 
   const __uploadImageToDatabase = useCallback(
     (uid, url) => {
@@ -174,7 +235,8 @@ function Profile() {
           'Allow-Control-Access-Origin': '*'
         },
         body: JSON.stringify({
-          uid
+          uid,
+          following
         })
       })
         .then((res) => res.json())
@@ -187,7 +249,7 @@ function Profile() {
         console.log(err);
       });
     }
-  }, [session]);
+  }, [session, following]);
 
   const __classifyFriend = useCallback(() => {
     const {uid} = param;
@@ -262,12 +324,16 @@ function Profile() {
                 </form>
               ) : (
                  <>
-                  <div className='quote'>
-                    {quote}
-                  </div>
-                  <div className='follow-btn txt-bold'>
-                    팔로우하기
-                  </div>
+                  <div className='quote'>{quote}</div>
+                  {isFollowingForUI ? (
+                    <div className='following-btn txt-bold' onClick={__unFollow}>
+                      팔로잉
+                    </div>
+                  ) : (
+                    <div className='follow-btn txt-bold' onClick={__doFollow}>
+                      팔로우하기
+                    </div>
+                  )}
                 </>
             )}
           </div>
@@ -314,7 +380,7 @@ function Profile() {
             </div>
             <div className='desc'>
               <div className='title txt-bold'>친구</div>
-              <div className='count'>0</div>
+              <div className='count'>{following.length}</div>
             </div>
 
             {isMyProfile && (
@@ -330,7 +396,8 @@ function Profile() {
                         className='friend'
                         key={idx}
                         onClick={() => history.push(`/profile/${uid}`, {
-                          nickname
+                          nickname,
+                          isFollowing : false
                         })}
                       >
                         <div className='profile-image' 

@@ -84,6 +84,26 @@ router.post('/feed/new', (req,res,next) => {
   
 })
 
+router.post('/user/profile/nickname', (req,res,next) => {
+  const {uid} = req.body;
+
+  Fdatabase.ref(`users/${uid}/profile/nickname`).once('value', snapshot => {
+    if (snapshot.exists()) {
+      res.status(200).json({
+        nickname : snapshot.val()
+      })
+    } else {
+      res.status(200).json({
+        nickname : undefined
+      })
+    }
+  }).catch(err => {
+    res.status(400).json({
+      err
+    })
+  })
+})
+
 router.post('/user/profile/image', (req,res,next) => {
   const {uid} = req.body;
 
@@ -142,7 +162,7 @@ router.post('/user/feed', (req, res, next) => {
       //피드가 존재하지 않을 때
       res.status(200).json({
         feed: [],
-        msg: '피드가 존재하디 않습니다'
+        msg: '피드가 존재하지 않습니다'
       })
     }
   }).catch(err => {
@@ -153,7 +173,9 @@ router.post('/user/feed', (req, res, next) => {
 })
 
 router.post('/friends/recommend', (req, res, next) => {
-  const {uid} =req.body;
+  const {uid, following} =req.body;
+
+  const reformFollowing = following.map(item => item.uid);
 
   Fdatabase.ref('users').once('value', snapshot => {
     if (snapshot.exists()) {
@@ -169,7 +191,7 @@ router.post('/friends/recommend', (req, res, next) => {
       const exceptMe = objectToArr.filter(i => i.uid !== uid);
 
       //친구 팔로우 및 팔로잉 작업할때 변경해야함.
-      const exceptMyNode = exceptMe;
+      const exceptMyNode = exceptMe.filter(i => reformFollowing.indexOf(i.uid) === -1);
 
       res.status(200).json({
         friends: exceptMyNode,
@@ -186,6 +208,42 @@ router.post('/friends/recommend', (req, res, next) => {
       err
     })
   })
+})
+
+router.post('/friend/follow', (req,res,next) => {
+  const {fuid, uid} = req.body;
+
+  Promise.all([
+    Fdatabase.ref(`users/${uid}/following`).push({uid : fuid}),
+    Fdatabase.ref(`users/${fuid}/follower`).push({uid})
+  ])
+    .then(() => {
+      res.status(200).json({
+        msg : '팔로우 성공'
+      })
+    }).catch(err => {
+      res.status(500).json({
+        err
+      })
+    })
+})
+
+router.post('/friend/unfollow', (req,res,next) => {
+  const {fuid, uid} = req.body;
+
+  Promise.all([
+    Fdatabase.ref(`users/${uid}/following`).orderByChild('uid').equalTo(fuid).ref.remove(),
+    Fdatabase.ref(`users/${fuid}/follower`).orderByChild('uid').equalTo(uid).ref.remove()
+  ])
+    .then(() => {
+      res.status(200).json({
+        msg : '팔로우 성공'
+      })
+    }).catch(err => {
+      res.status(500).json({
+        err
+      })
+    })
 })
 
 router.get('/helloworld', (req, res, next) => {

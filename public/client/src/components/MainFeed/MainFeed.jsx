@@ -1,7 +1,8 @@
 import firebaseApp from '@config/firebaseApp';
 import React, { useCallback, useState, useRef } from 'react'
 import { useSelector } from 'react-redux';
-import './css/index.css'
+import Friend from './components/Friend';
+import './css/index.css';
 
 const Fstorage = firebaseApp.storage();
 
@@ -29,6 +30,7 @@ function MainFeed() {
   const session = useSelector(state => state.auth.session);
   const [context, setContext] = useState(undefined);
   const [feed_image, setFeed_image] = useState(undefined);
+  const following = useSelector(state => state.auth.following);
 
   const __makeFeed = useCallback(
     async(e) => {
@@ -274,62 +276,12 @@ function MainFeed() {
               나의 친구
             </div>
             <ul className='friend-list-wrapper'>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
-              <li className='friend'>
-                <div className='profile-image'>
-
-                </div>
-                <div className='nickname txt-bold'>
-                  Mickey_lover
-                </div>
-              </li>
+              {
+                following.map((item, idx) => {
+                  const {uid} = item;
+                  return <Friend key={idx} uid={uid} />
+                })
+              }
             </ul>
           </div>
         </div>

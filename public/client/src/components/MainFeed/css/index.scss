@@ -197,6 +197,7 @@ $class-101-gray: #e8e8e8;
             .friend {
               display: flex;
               align-items: center;
+              cursor: pointer;
 
               .profile-image {
                 width: 40px;
@@ -204,6 +205,9 @@ $class-101-gray: #e8e8e8;
                 border-radius: 40px;
                 background-color: $class-101-gray;
                 margin-right: 12px;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-size: cover;
               }
               .nickname {
                 font-size: 12px;
