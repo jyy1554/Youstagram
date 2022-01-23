@@ -56,10 +56,12 @@ function Friend({uid}) {
     __getImage();
     return () => {};
   }, [__getNickname, __getImage]);
-  
-  
+
   return (
-    <li className='friend' onClick={() => history.push(`/profile/${uid}`,{nickname, isFollowing : true})}>
+    <li
+      className='friend'
+      onClick={() => history.push(`/profile/${uid}`,{nickname, isFollowing : true})}
+    >
       <div className='profile-image' style={image && {backgroundImage : `url(${image})`}}></div>
       <div className='nickname txt-bold'>{nickname}</div>
     </li>

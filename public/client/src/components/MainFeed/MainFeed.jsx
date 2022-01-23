@@ -1,8 +1,10 @@
 import firebaseApp from '@config/firebaseApp';
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useCallback, useState, useRef, useEffect } from 'react'
 import { useSelector } from 'react-redux';
+import Feed from './components/Feed';
 import Friend from './components/Friend';
 import './css/index.css';
+
 
 const Fstorage = firebaseApp.storage();
 
@@ -27,10 +29,12 @@ function uploadImageToFirebaseStorage(data, timestamp) {
 
 function MainFeed() {
   const contextRef = useRef(null);
-  const session = useSelector(state => state.auth.session);
   const [context, setContext] = useState(undefined);
   const [feed_image, setFeed_image] = useState(undefined);
-  const following = useSelector(state => state.auth.following);
+  const session = useSelector(state => state.auth.session);
+  const following = useSelector((state) => state.auth.following);
+  const followers = useSelector((state) => state.auth.follower);
+  const feeds = useSelector((state) => state.auth.feeds);
 
   const __makeFeed = useCallback(
     async(e) => {
@@ -64,7 +68,8 @@ function MainFeed() {
               profile : {
                 uid
               },
-              timestamp : nowTime
+              timestamp : nowTime,
+              followers
             })
           })
             .then(res => res.json())
@@ -79,7 +84,7 @@ function MainFeed() {
             });
       }
     },
-    [context, feed_image, session, contextRef]
+    [context, feed_image, session, contextRef, followers]
   );
 
   const __getData64FromImage = useCallback(
@@ -105,7 +110,7 @@ function MainFeed() {
             <div className='write-text'>
               <div className='profile-image'></div>
               <div className='inp'>
-                <input 
+                <input
                   ref={contextRef}
                   type="text"
                   placeholder='오늘 무슨일이 있었나요?'
@@ -122,144 +127,19 @@ function MainFeed() {
               </div>
             </div>
             <div className='pre-image'>
-              { feed_image ? ( <img src={feed_image} alt="이미지 미리보기" /> ) : (<></>) }
+              { feed_image ? (
+                  <img src={feed_image} alt="이미지 미리보기" />
+                ) : (
+                  <></>
+              )}
             </div>
           </form>
 
-
-          <div className='feed'>
-            <div className='top'>
-              <div className='profile-image'>
-
-              </div>
-              <div className='profile-desc'>
-                <div className='nickname txt-bold'>
-                  해도디
-                </div>
-                <div className='timestamp'>
-                  8:15 pm, yesterday
-                </div>
-              </div>
-            </div>
-            <div className='contents'>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus natus quaerat voluptatum corrupti expedita doloribus ullam accusantium, obcaecati, eveniet aliquam asperiores rem. Quo, autem corrupti animi cumque iste minima nulla.
-            </div>
-            <div className='bottom'>
-              <div className='like'>
-                <div className='asset'>
-                  <img src="/assets/feed/like-dac.svg" alt="좋아요" />
-                </div>
-                <div className='count txt-bold'>25k</div>
-              </div>
-              <div className='comment'>
-                <div className='asset'>
-                  <img src="/assets/feed/comment.svg" alt="댓글" />
-                </div>
-                <div className='count txt-bold'>2k</div>
-              </div>
-            </div>
-          </div>
-
-          <div className='feed'>
-            <div className='top'>
-              <div className='profile-image'>
-
-              </div>
-              <div className='profile-desc'>
-                <div className='nickname txt-bold'>
-                  해도디
-                </div>
-                <div className='timestamp'>
-                  8:15 pm, yesterday
-                </div>
-              </div>
-            </div>
-            <div className='contents'>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus natus quaerat voluptatum corrupti expedita doloribus ullam accusantium, obcaecati, eveniet aliquam asperiores rem. Quo, autem corrupti animi cumque iste minima nulla.
-              <div className='image'></div>
-            </div>
-            <div className='bottom'>
-              <div className='like'>
-                <div className='asset'>
-                  <img src="/assets/feed/like-dac.svg" alt="좋아요" />
-                </div>
-                <div className='count txt-bold'>25k</div>
-              </div>
-              <div className='comment'>
-                <div className='asset'>
-                  <img src="/assets/feed/comment.svg" alt="댓글" />
-                </div>
-                <div className='count txt-bold'>2k</div>
-              </div>
-            </div>
-          </div>
-
-          <div className='feed'>
-            <div className='top'>
-              <div className='profile-image'>
-
-              </div>
-              <div className='profile-desc'>
-                <div className='nickname txt-bold'>
-                  해도디
-                </div>
-                <div className='timestamp'>
-                  8:15 pm, yesterday
-                </div>
-              </div>
-            </div>
-            <div className='contents'>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus natus quaerat voluptatum corrupti expedita doloribus ullam accusantium, obcaecati, eveniet aliquam asperiores rem. Quo, autem corrupti animi cumque iste minima nulla.
-            </div>
-            <div className='bottom'>
-              <div className='like'>
-                <div className='asset'>
-                  <img src="/assets/feed/like-dac.svg" alt="좋아요" />
-                </div>
-                <div className='count txt-bold'>25k</div>
-              </div>
-              <div className='comment'>
-                <div className='asset'>
-                  <img src="/assets/feed/comment.svg" alt="댓글" />
-                </div>
-                <div className='count txt-bold'>2k</div>
-              </div>
-            </div>
-          </div>
-
-          <div className='feed'>
-            <div className='top'>
-              <div className='profile-image'>
-
-              </div>
-              <div className='profile-desc'>
-                <div className='nickname txt-bold'>
-                  해도디
-                </div>
-                <div className='timestamp'>
-                  8:15 pm, yesterday
-                </div>
-              </div>
-            </div>
-            <div className='contents'>
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Voluptatibus natus quaerat voluptatum corrupti expedita doloribus ullam accusantium, obcaecati, eveniet aliquam asperiores rem. Quo, autem corrupti animi cumque iste minima nulla.
-              <div className='image'></div>
-            </div>
-            <div className='bottom'>
-              <div className='like'>
-                <div className='asset'>
-                  <img src="/assets/feed/like-dac.svg" alt="좋아요" />
-                </div>
-                <div className='count txt-bold'>25k</div>
-              </div>
-              <div className='comment'>
-                <div className='asset'>
-                  <img src="/assets/feed/comment.svg" alt="댓글" />
-                </div>
-                <div className='count txt-bold'>2k</div>
-              </div>
-            </div>
-          </div>
+          {feeds.map((item,idx) => {
+            return (
+              <Feed fid={item} key={idx} />
+            );
+          })}
 
         </div>
         <div className='friend-list'>

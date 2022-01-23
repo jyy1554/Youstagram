@@ -1,14 +1,18 @@
-import firebaseApp from '@config/firebaseApp';
-import React, { useCallback, useState, useEffect } from 'react'
+import React, { useCallback, useState, useEffect } from 'react';
+import './css/index.css';
 import { useSelector } from 'react-redux';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import firebaseApp from '@config/firebaseApp';
 import Feed from '../Feed/Feed';
-import './css/index.css'
+import { useHistory, useLocation, useParams } from 'react-router-dom';
 
 const Fdatabase = firebaseApp.database();
 const Fstorage = firebaseApp.storage();
 
-function Profile({location : {state : {isFollowing}}}) {
+function Profile({
+  location : {
+    state : { isFollowing }
+  }
+}) {
   const [isFollowingForUI, setIsFollowingForUI] = useState(isFollowing ? isFollowing : false);
   const [userImage, setUserImage] = useState(undefined);
   const [quote, setQuote] = useState(undefined);
@@ -50,7 +54,7 @@ function Profile({location : {state : {isFollowing}}}) {
         });
     }
   }, [session, param]);
-  
+
 
   const __doFollow = useCallback(() => {
     if (session) {
@@ -79,7 +83,6 @@ function Profile({location : {state : {isFollowing}}}) {
         });
     }
   }, [session, param]);
-
 
   const __uploadImageToDatabase = useCallback(
     (uid, url) => {
@@ -395,9 +398,10 @@ function Profile({location : {state : {isFollowing}}}) {
                       <li
                         className='friend'
                         key={idx}
-                        onClick={() => history.push(`/profile/${uid}`, {
-                          nickname,
-                          isFollowing : false
+                        onClick={() =>
+                          history.push(`/profile/${uid}`, {
+                            nickname,
+                            isFollowing : false
                         })}
                       >
                         <div className='profile-image' 

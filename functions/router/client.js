@@ -54,11 +54,14 @@ router.post('/user/new', (req,res,next) => {
 router.post('/feed/new', (req,res,next) => {
   const {
     feed,
-    profile, 
-    timestamp
+    profile,
+    timestamp,
+    followers
   } = req.body
 
-  const {uid} = profile
+  const {
+    uid : uuid
+  } = profile;
 
   Fdatabase.ref('feed').push({
     feed,
@@ -66,15 +69,26 @@ router.post('/feed/new', (req,res,next) => {
     timestamp
   }).then(snapshot => {
     const fid = snapshot.key // 무작위의 키가 만들어진 후에 그 키를 반환
-    Fdatabase.ref(`users/${uid}/feed`).push({fid}).then(() => {
-      res.status(200).json({
-        msg : '피드가 올라갔습니다.'
+    Promise.all([
+      Fdatabase.ref(`users/${uuid}/feed`).push({
+        fid
+      }) ,
+      followers.forEach(item => {
+        const {uid} = item;
+        Fdatabase.ref(`users/${uid}/feed`).push({
+          fid
+        })
       })
-    }).catch(err => {
-      res.status(400).json({
-        err
-      })
-    }) // 유저가 본인의 글을 가져올때 필요합니다.
+    ])
+      .then(() => {
+        res.status(200).json({
+          msg : '피드가 올라갔습니다.'
+        })
+      }).catch(err => {
+        res.status(400).json({
+          err
+        })
+      }) // 유저가 본인의 글을 가져올때 필요합니다.
 
   }).catch(err => {
     res.status(400).json({
@@ -229,11 +243,19 @@ router.post('/friend/follow', (req,res,next) => {
 })
 
 router.post('/friend/unfollow', (req,res,next) => {
-  const {fuid, uid} = req.body;
+  const {
+    fuid,
+    uid
+  } = req.body;
 
   Promise.all([
-    Fdatabase.ref(`users/${uid}/following`).orderByChild('uid').equalTo(fuid).ref.remove(),
-    Fdatabase.ref(`users/${fuid}/follower`).orderByChild('uid').equalTo(uid).ref.remove()
+    Fdatabase.ref(`users/${uid}/following`).orderByChild('uid').equalTo(fuid).once('value', snapshot => {
+      snapshot.ref.child(Object.keys(snapshot.val())[0]).remove()
+    }),
+
+    Fdatabase.ref(`users/${fuid}/follower`).orderByChild('uid').equalTo(uid).once('value', snapshot => {
+      snapshot.ref.child(Object.keys(snapshot.val())[0]).remove()
+    })
   ])
     .then(() => {
       res.status(200).json({
@@ -244,6 +266,27 @@ router.post('/friend/unfollow', (req,res,next) => {
         err
       })
     })
+})
+
+router.post('/feed/detail', (req,res,next) => {
+  const {fid} = req.body;
+
+  Fdatabase.ref(`feed/${fid}`).once('value',snapshot => {
+    if (snapshot.exists()) {
+      console.log(snapshot.val());
+      res.status(200).json({
+        data : snapshot.val()
+      })
+    } else {
+      res.status(400).json({
+        msg : '데이터가 없습니다'
+      })
+    }
+  }).catch(err => {
+    res.status(400).json({
+      err
+    })
+  })
 })
 
 router.get('/helloworld', (req, res, next) => {

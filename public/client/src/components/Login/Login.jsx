@@ -33,6 +33,7 @@ function Login() {
   )
 
   useEffect(() => {
+    Fauth.signOut();  //로그아웃
     dispatch ({
       type : __UPDATE_HEADER_STATE__,
       payload : false

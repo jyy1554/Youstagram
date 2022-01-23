@@ -22,14 +22,31 @@ function makeFeedTime(timestamp) {
     hour > 12 ?  makeTwoDigits(hour - 12) : makeTwoDigits(hour)}:${makeTwoDigits(minutes)}, ${date === 0 ? '오늘' : date === 1 ? '어제' : `${date}일전`}`;
 }
 
-function Feed({ feed: {like, comment, context, image}, profile: {uid},
-  timestamp }) {
+function Feed({ fid }) {
+  const [
+    {
+      feed: {like, comment, context, image},
+      profile: {uid},
+      timestamp
+    },
+    setData
+  ] = useState({
+    feed : {
+      like : 0,
+      comment : '',
+      context : '',
+      image : undefined
+    },
+    profile : {
+      uid : undefined
+    },
+    timestamp : 0
+  });
   const session = useSelector(state => state.auth.session);
   const [userImage, setUserImage] = useState(undefined);
 
   const __getUserProfileFromServer = useCallback(() => {
-    if (session) {
-      const {uid} = session;
+    if (uid) {
       let url = '/user/profile/image';
 
       fetch(url,
@@ -44,19 +61,41 @@ function Feed({ feed: {like, comment, context, image}, profile: {uid},
           })
         })
           .then(res => res.json())
-          .then(({ image }) => {
-            setUserImage(image);
-          })
+          .then(({image}) => {setUserImage(image)})
           .catch(err => {
             console.log(err);
           });
     }
-  }, [session]);
+  }, [uid]);
+
+  const __getData = useCallback(() => {
+    let url = '/feed/detail';
+
+    fetch(url,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Allow-Control-Access-Origin': '*',
+        },
+        body: JSON.stringify({
+          fid
+        })
+      })
+        .then(res => res.json())
+        .then(({data}) => {
+          setData(data);
+        })
+        .catch(err => {
+          console.log(err);
+        });
+  }, [fid]);
 
   useEffect(() => {
+    __getData();
     __getUserProfileFromServer();
     return () => {}
-  }, [__getUserProfileFromServer])
+  }, [__getData, __getUserProfileFromServer])
 
   return (
     <div className='feed'>

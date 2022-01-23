@@ -1,10 +1,18 @@
+//리덕스에 추가하는 부분들이다.
+
 const initialState = {
   session : undefined,
   following : [],
-  follower : []
-}
+  follower : [],
+  feeds : []
+};
 const auth = (state = initialState, { type, payload }) => {
   switch (type) {
+    case '@auth/FEEDS_UPDATE' :
+      return {
+        ...state,
+        feeds : [...payload]
+      }
     case '@auth/FOLLOWER_UPDATE' :
       return {
         ...state,
@@ -23,5 +31,6 @@ const auth = (state = initialState, { type, payload }) => {
       default:
         return state
   }
-}
-export default auth
+};
+
+export default auth;
