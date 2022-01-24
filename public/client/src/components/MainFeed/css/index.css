@@ -51,6 +51,9 @@
   border-radius: 40px;
   background-color: #e8e8e8;
   margin-right: 12px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
 }
 
 #root .mainfeed .wrapper .feed-list .write-feed .write-text .inp {
@@ -130,6 +133,9 @@
   border-radius: 40px;
   background-color: #e8e8e8;
   margin-right: 12px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .mainfeed .wrapper .feed-list .feed .top .profile-desc .nickname {
@@ -228,6 +234,9 @@
   border-radius: 40px;
   background-color: #e8e8e8;
   margin-right: 12px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .mainfeed .wrapper .friend-list .my-profile .nickname {

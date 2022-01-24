@@ -1,5 +1,6 @@
+import { __UPDATE_DETAIL_STATE__ } from '@dispatchers/auth';
 import React, { useEffect, useCallback, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
 const oneDay = 1000 * 60 * 60 * 24;
 
@@ -23,6 +24,7 @@ function makeFeedTime(timestamp) {
 }
 
 function Feed({ fid }) {
+  const dispatch = useDispatch();
   const [
     {
       feed: {like, comment, context, image},
@@ -91,6 +93,23 @@ function Feed({ fid }) {
         });
   }, [fid]);
 
+  const __openFeedDetail = useCallback(() => {
+
+    const feedData = {
+      feed: {like, comment, context, image},
+      profile: {uid},
+      timestamp
+    }
+
+    console.log(feedData);
+
+    dispatch({
+      type : __UPDATE_DETAIL_STATE__,
+      payload : true
+    })
+  }, [dispatch, like, comment, image, context, uid, timestamp]);
+
+
   useEffect(() => {
     __getData();
     __getUserProfileFromServer();
@@ -98,7 +117,7 @@ function Feed({ fid }) {
   }, [__getData, __getUserProfileFromServer])
 
   return (
-    <div className='feed'>
+    <div className='feed' onClick={__openFeedDetail}>
       <div className='top'>
         <div
           className='profile-image'

@@ -36,6 +36,9 @@ $class-101-gray: #e8e8e8;
               border-radius: 40px;
               background-color: $class-101-gray;
               margin-right: 12px;
+              background-repeat: no-repeat;
+              background-position: center;
+              background-size: cover;
             }
   
             .inp {
@@ -88,12 +91,16 @@ $class-101-gray: #e8e8e8;
           .top {
             display: flex;
             align-items: center;
+
             .profile-image {
               width: 40px;
               height: 40px;
               border-radius: 40px;
               background-color: $class-101-gray;
               margin-right: 12px;
+              background-position: center;
+              background-size: cover;
+              background-repeat: no-repeat;
             }
             .profile-desc {
               .nickname {
@@ -108,7 +115,7 @@ $class-101-gray: #e8e8e8;
               }
             }
           }
-          
+
           .contents {
             margin-top: 48px;
             font-size: 12px;
@@ -174,6 +181,9 @@ $class-101-gray: #e8e8e8;
             border-radius: 40px;
             background-color: $class-101-gray;
             margin-right: 12px;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
           }
           .nickname {
             font-size: 12px;

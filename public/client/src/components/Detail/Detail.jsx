@@ -1,12 +1,38 @@
-import React from 'react'
+import { __UPDATE_DETAIL_STATE__ } from '@dispatchers/auth';
+import React, { useCallback, useEffect } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
 import './css/index.css'
 
 function Detail() {
+  const dispatch = useDispatch();
+
+  const __closeDetail = useCallback(() => {
+    dispatch({
+      type : __UPDATE_DETAIL_STATE__,
+      payload : false
+    })
+  }, [dispatch]);
+
+  const __whenKeyDown = useCallback((e) => {
+    const code = e.code;
+    if (code === 'Escape') {
+      __closeDetail();
+    }
+  }, [__closeDetail]);
+
+  useEffect(() => {
+    window.addEventListener('keydown', __whenKeyDown);
+    return () => {
+      window.removeEventListener('keydown', __whenKeyDown);
+    };
+  }, [__whenKeyDown]);
+
+
   return (
     <div className='feed-detail'>
-      <div className='bg'></div>
+      <div className='bg' onClick={__closeDetail}></div>
       <div className='wrapper'>
-        <div className='close'>
+        <div className='close' onClick={__closeDetail}>
           <img src="/assets/feed/close.svg" alt="닫기" />
         </div>
         <div className='main-image'>

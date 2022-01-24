@@ -29,12 +29,13 @@ function uploadImageToFirebaseStorage(data, timestamp) {
 
 function MainFeed() {
   const contextRef = useRef(null);
+  const session = useSelector(state => state.auth.session);
   const [context, setContext] = useState(undefined);
   const [feed_image, setFeed_image] = useState(undefined);
-  const session = useSelector(state => state.auth.session);
   const following = useSelector((state) => state.auth.following);
   const followers = useSelector((state) => state.auth.follower);
   const feeds = useSelector((state) => state.auth.feeds);
+  const [userProfileImage, setUserProfileImage] = useState(undefined);
 
   const __makeFeed = useCallback(
     async(e) => {
@@ -90,7 +91,7 @@ function MainFeed() {
   const __getData64FromImage = useCallback(
     (e) => {
       const fileList = e.target.files[0];
-        
+
       const reader = new FileReader();
 
       reader.onload = (e) => {
@@ -102,13 +103,49 @@ function MainFeed() {
     [],
   )
 
+  const __getUserProfileImage = useCallback(() => {
+    if (session) {
+      const {uid} = session;
+
+      let url = '/user/profile/image';
+
+      fetch(url,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type' : 'application/json',
+            'Allow-Control-Access-Origin' : '*',
+          },
+          body: JSON.stringify({
+            uid
+          })
+        })
+          .then(res => res.json())
+          .then(({image}) => {
+            setUserProfileImage(image);
+          }).catch(err => {
+            console.log(err);
+          });
+    }
+  }, [session]);
+
+  useEffect(() => {
+    __getUserProfileImage();
+    return () => {};
+  }, [__getUserProfileImage]);
+
+
+
   return (
     <div className='mainfeed'>
       <div className='wrapper'>
         <div className='feed-list'>
           <form className='write-feed' onSubmit={__makeFeed}>
             <div className='write-text'>
-              <div className='profile-image'></div>
+              <div
+                className='profile-image'
+                style={ userProfileImage && {backgroundImage : `url(${userProfileImage})`}}
+              ></div>
               <div className='inp'>
                 <input
                   ref={contextRef}
@@ -144,11 +181,12 @@ function MainFeed() {
         </div>
         <div className='friend-list'>
           <div className='my-profile'>
-            <div className='profile-image'>
-
-            </div>
+            <div
+              className='profile-image'
+              style={ userProfileImage && {backgroundImage : `url(${userProfileImage})`}}
+            ></div>
             <div className='nickname txt-bold'>
-              해도디
+              {session && session.displayName}
             </div>
           </div>
           <div className='my-friends'>
