@@ -1,4 +1,5 @@
 import { __UPDATE_DETAIL_STATE__ } from '@dispatchers/auth';
+import { __UPDATE_DETAIL_DATA__ } from '@dispatchers/layouts';
 import React, { useEffect, useCallback, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
@@ -46,6 +47,31 @@ function Feed({ fid }) {
   });
   const session = useSelector(state => state.auth.session);
   const [userImage, setUserImage] = useState(undefined);
+  const [userNickname, setUserNickname] = useState(undefined);
+
+  const __getUserNickname = useCallback(() => {
+    if (uid) {
+      let url = '/user/profile/nickname';
+
+      fetch(url,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Allow-Control-Access-Origin': '*',
+          },
+          body: JSON.stringify({
+            uid
+          })
+        })
+          .then(res => res.json())
+          .then(({nickname}) => {setUserNickname(nickname)})
+          .catch(err => {
+            console.log(err);
+          });
+    }
+  }, [uid]);
+
 
   const __getUserProfileFromServer = useCallback(() => {
     if (uid) {
@@ -95,26 +121,39 @@ function Feed({ fid }) {
 
   const __openFeedDetail = useCallback(() => {
 
+    //데이터 가져오기
     const feedData = {
       feed: {like, comment, context, image},
-      profile: {uid},
-      timestamp
-    }
+      profile: {
+        uid,
+        nickname: userNickname ? userNickname : '해도디',
+        image : userImage
+      },
+      timestamp,
+      config: {
+        time: makeFeedTime(timestamp)
+      }
+    };
 
     console.log(feedData);
+    dispatch({
+      type : __UPDATE_DETAIL_DATA__,
+      payload : feedData
+    });
 
     dispatch({
       type : __UPDATE_DETAIL_STATE__,
       payload : true
-    })
-  }, [dispatch, like, comment, image, context, uid, timestamp]);
+    });
+  }, [dispatch, like, comment, image, context, uid, timestamp, userNickname, userImage]);
 
 
   useEffect(() => {
     __getData();
+    __getUserNickname();
     __getUserProfileFromServer();
     return () => {}
-  }, [__getData, __getUserProfileFromServer])
+  }, [__getData, __getUserNickname, __getUserProfileFromServer])
 
   return (
     <div className='feed' onClick={__openFeedDetail}>
@@ -125,7 +164,7 @@ function Feed({ fid }) {
         </div>
         <div className='profile-desc'>
           <div className='nickname txt-bold'>
-            {session ? session.displayName : '해도디'}
+            {userNickname ? userNickname : '해도디'}
           </div>
           <div className='timestamp'>
             {makeFeedTime(timestamp)}

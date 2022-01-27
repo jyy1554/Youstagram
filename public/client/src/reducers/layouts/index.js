@@ -1,12 +1,18 @@
 const initialState = {
   isHeaderOpen : false,
   isDetailOpen : false,
+  detailData : undefined
 }
 const layouts = (state = initialState, {
   type,
   payload
 }) => {
   switch (type) {
+    case '@layouts/UPDATE_DETAIL_DATA' :
+      return {
+        ...state,
+        detailData : payload
+      };
     case '@layouts/UPDATE_DETAIL_STATE':
       return {
         ...state,
@@ -16,7 +22,7 @@ const layouts = (state = initialState, {
       return {
         ...state,
         isHeaderOpen: payload
-      }
+      };
     default:
       return state;
   }

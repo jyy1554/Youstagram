@@ -50,6 +50,9 @@ $class-101-blue: #5085e8;
         background-color: $class-101-gray;
         flex-shrink: 0;
         border-radius: 15px 0 0 15px;
+        background-position: center;
+        background-size: cover;
+        background-repeat: no-repeat;
       }
 
       .contents {
@@ -71,6 +74,9 @@ $class-101-blue: #5085e8;
               border-radius: 43px;
               background-color: $class-101-gray;
               margin-right: 16px;
+              background-position: center;
+              background-size: cover;
+              background-repeat: no-repeat;
             }
             .feed-desc {
               .nickname {
@@ -146,6 +152,9 @@ $class-101-blue: #5085e8;
                   border-radius: 33px;
                   background-color: $class-101-gray;
                   margin-right: 16px;
+                  background-position: center;
+                  background-size: cover;
+                  background-repeat: no-repeat;
                 }
                 .feed-desc {
                   .nickname {
@@ -211,6 +220,9 @@ $class-101-blue: #5085e8;
             background-color: $class-101-gray;
             margin-right: 14px;
             flex-shrink: 0;
+            background-position: center;
+            background-size: cover;
+            background-repeat: no-repeat;
           }
           .write-comment {
             flex: 1;

@@ -59,6 +59,9 @@
   -ms-flex-negative: 0;
       flex-shrink: 0;
   border-radius: 15px 0 0 15px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .feed-detail .wrapper .contents {
@@ -93,6 +96,9 @@
   border-radius: 43px;
   background-color: #e8e8e8;
   margin-right: 16px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .feed-detail .wrapper .contents .feed-content .top .feed-desc .nickname {
@@ -199,6 +205,9 @@
   border-radius: 33px;
   background-color: #e8e8e8;
   margin-right: 16px;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .feed-detail .wrapper .contents .feed-comments .comment-form .top .left .feed-desc .nickname {
@@ -287,6 +296,9 @@
   margin-right: 14px;
   -ms-flex-negative: 0;
       flex-shrink: 0;
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 #root .feed-detail .wrapper .contents .feed-write-comment .write-comment {
